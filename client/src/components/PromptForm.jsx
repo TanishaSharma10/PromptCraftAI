@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const modes = ["Professional", "Coding", "Creative", "Marketing", "Learning"];
 
@@ -21,7 +22,12 @@ const PromptForm = () => {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, duration: 0.6 }}
+      className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl"
+    >
       <h2 className="text-2xl font-semibold mb-5">Enter Your Prompt</h2>
 
       <textarea
@@ -65,7 +71,7 @@ const PromptForm = () => {
       >
         {loading ? "⏳ Enhancing..." : "✨ Enhance Prompt"}
       </button>
-    </div>
+    </motion.div>
   );
 };
 
