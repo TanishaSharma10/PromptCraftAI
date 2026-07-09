@@ -5,6 +5,20 @@ const modes = ["Professional", "Coding", "Creative", "Marketing", "Learning"];
 const PromptForm = () => {
   const [prompt, setPrompt] = useState("");
   const [selectedMode, setSelectedMode] = useState("Professional");
+  const [loading, setLoading] = useState(false);
+
+  const handleEnhance = async () => {
+    if (!prompt.trim()) {
+      alert("Please enter a prompt.");
+      return;
+    }
+
+    setLoading(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    setLoading(false);
+  };
 
   return (
     <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl">
@@ -44,8 +58,12 @@ const PromptForm = () => {
         <p className="text-gray-400 text-sm">Max 1000</p>
       </div>
 
-      <button className="w-full mt-6 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 font-semibold hover:scale-105 transition duration-300">
-        ✨ Enhance Prompt
+      <button
+        onClick={handleEnhance}
+        disabled={loading}
+        className="w-full mt-6 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 font-semibold hover:scale-105 transition duration-300"
+      >
+        {loading ? "⏳ Enhancing..." : "✨ Enhance Prompt"}
       </button>
     </div>
   );
