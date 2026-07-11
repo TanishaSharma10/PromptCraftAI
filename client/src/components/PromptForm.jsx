@@ -3,20 +3,31 @@ import { motion } from "framer-motion";
 
 const modes = ["Professional", "Coding", "Creative", "Marketing", "Learning"];
 
-const PromptForm = () => {
+const PromptForm = ({ setEnhancedPrompt }) => {
   const [prompt, setPrompt] = useState("");
   const [selectedMode, setSelectedMode] = useState("Professional");
   const [loading, setLoading] = useState(false);
 
   const handleEnhance = async () => {
-    if (!prompt.trim()) {
-      alert("Please enter a prompt.");
-      return;
-    }
-
     setLoading(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch("http://localhost:5000/api/enhance", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+        }),
+      });
+
+      const data = await response.json();
+
+      setEnhancedPrompt(data.enhancedPrompt);
+    } catch (error) {
+      console.error(error);
+    }
 
     setLoading(false);
   };

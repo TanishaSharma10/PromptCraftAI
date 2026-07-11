@@ -1,7 +1,7 @@
 import { Copy } from "lucide-react";
 import { motion } from "framer-motion";
 
-const OutputCard = () => {
+const OutputCard = ({ enhancedPrompt }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -24,7 +24,7 @@ const OutputCard = () => {
 
       <div className="bg-slate-900 rounded-xl p-5 border border-gray-700">
         <p className="text-gray-300 leading-8">
-          Your enhanced prompt will appear here...
+          {enhancedPrompt || "Your enhanced prompt will appear here..."}
         </p>
       </div>
     </motion.div>

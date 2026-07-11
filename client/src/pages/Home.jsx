@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Hero from "../components/Hero";
 import PromptForm from "../components/PromptForm";
 import OutputCard from "../components/OutputCard";
 import { motion } from "framer-motion";
 
 const Home = () => {
+  const [enhancedPrompt, setEnhancedPrompt] = useState("");
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
       <motion.div
@@ -34,9 +36,9 @@ const Home = () => {
         <div className="w-full max-w-5xl">
           <Hero />
 
-          <PromptForm />
+          <PromptForm setEnhancedPrompt={setEnhancedPrompt} />
 
-          <OutputCard />
+          <OutputCard enhancedPrompt={enhancedPrompt} />
         </div>
       </div>
     </div>
