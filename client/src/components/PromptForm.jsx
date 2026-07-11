@@ -24,7 +24,11 @@ const PromptForm = ({ setEnhancedPrompt }) => {
 
       const data = await response.json();
 
-      setEnhancedPrompt(data.enhancedPrompt);
+      if (data.success) {
+        setEnhancedPrompt(data.enhancedPrompt);
+      } else {
+        alert(data.message);
+      }setEnhancedPrompt(data.enhancedPrompt);
     } catch (error) {
       console.error(error);
     }
