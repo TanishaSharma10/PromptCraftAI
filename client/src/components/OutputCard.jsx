@@ -1,7 +1,27 @@
 import { Copy } from "lucide-react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
+
+
+
 const OutputCard = ({ enhancedPrompt }) => {
+  
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(enhancedPrompt);
+  
+      setCopied(true);
+  
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+  
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -13,12 +33,13 @@ const OutputCard = ({ enhancedPrompt }) => {
         <h2 className="text-2xl font-semibold">Enhanced Prompt</h2>
 
         <motion.button
+          onClick={handleCopy}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.96 }}
           className="flex items-center gap-2 bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700 transition"
         >
           <Copy size={18} />
-          Copy
+          {copied ? "Copied!" : "Copy"}
         </motion.button>
       </div>
 

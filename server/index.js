@@ -16,10 +16,28 @@ app.get("/", (req, res) => {
   res.send("🚀 PromptCraft AI Backend is Running!");
 });
 
+// Instructions for each enhancement mode
+const modeInstructions = {
+  Professional:
+    "Improve the prompt in a professional, formal and structured way.",
+
+  Coding:
+    "Improve the prompt for software development. Include implementation details, best practices, edge cases, and code-related clarity.",
+
+  Creative:
+    "Improve the prompt creatively using vivid language, storytelling, imagination and engaging ideas.",
+
+  Marketing:
+    "Improve the prompt from a marketing perspective. Focus on persuasive copy, target audience, emotional appeal and call-to-action.",
+
+  Learning:
+    "Improve the prompt so concepts are explained clearly with simple language, examples and step-by-step guidance.",
+};
+
 // Enhance Prompt Route
 app.post("/api/enhance", async (req, res) => {
   try {
-    const { prompt } = req.body;
+    const { prompt, mode } = req.body;
 
     if (!prompt) {
       return res.status(400).json({
@@ -27,6 +45,30 @@ app.post("/api/enhance", async (req, res) => {
         message: "Prompt is required.",
       });
     }
+
+    // Get the instruction for the selected mode
+    const instruction =
+      modeInstructions[mode] || modeInstructions.Professional;
+
+    // Build the final prompt for Gemini
+    const finalPrompt = `
+You are an expert Prompt Engineer.
+
+${instruction}
+
+Your task is to rewrite and enhance the user's prompt.
+
+Requirements:
+- Make it detailed.
+- Improve clarity.
+- Improve structure.
+- Keep the original intent.
+- Return ONLY the enhanced prompt.
+- Do NOT add explanations.
+
+User Prompt:
+${prompt}
+`;
 
     const apiKey = process.env.GEMINI_API_KEY;
 
@@ -37,23 +79,11 @@ app.post("/api/enhance", async (req, res) => {
           {
             parts: [
               {
-                text: `You are an expert Prompt Engineer.
-
-Improve the following prompt so that it becomes:
-- More detailed
-- Better structured
-- Clear
-- Professional
-- Easy for AI models to understand
-
-Return ONLY the improved prompt.
-
-Prompt:
-${prompt}`
-              }
-            ]
-          }
-        ]
+                text: finalPrompt,
+              },
+            ],
+          },
+        ],
       },
       {
         headers: {
@@ -69,9 +99,7 @@ ${prompt}`
       success: true,
       enhancedPrompt,
     });
-
   } catch (error) {
-
     console.log("========== GEMINI ERROR ==========");
     console.log("Status:", error.response?.status);
 

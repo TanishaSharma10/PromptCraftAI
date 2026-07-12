@@ -7,9 +7,11 @@ const PromptForm = ({ setEnhancedPrompt }) => {
   const [prompt, setPrompt] = useState("");
   const [selectedMode, setSelectedMode] = useState("Professional");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleEnhance = async () => {
     setLoading(true);
+    setError("");
 
     try {
       const response = await fetch("http://localhost:5000/api/enhance", {
@@ -19,6 +21,7 @@ const PromptForm = ({ setEnhancedPrompt }) => {
         },
         body: JSON.stringify({
           prompt,
+          mode: selectedMode,
         }),
       });
 
@@ -27,10 +30,13 @@ const PromptForm = ({ setEnhancedPrompt }) => {
       if (data.success) {
         setEnhancedPrompt(data.enhancedPrompt);
       } else {
-        alert(data.message);
-      }setEnhancedPrompt(data.enhancedPrompt);
+        setError(data.message || "Failed to enhance prompt.");
+        setEnhancedPrompt("");
+      }
     } catch (error) {
       console.error(error);
+      setEnhancedPrompt("");
+      setError("❌ Failed to enhance prompt. Please try again.");
     }
 
     setLoading(false);
@@ -55,7 +61,9 @@ const PromptForm = ({ setEnhancedPrompt }) => {
 
       <div className="flex justify-between items-center mt-3">
         <div className="mt-6">
-          <h3 className="text-gray-300 font-medium mb-3">Enhancement Mode</h3>
+          <h3 className="text-gray-300 font-medium mb-3">
+            Enhancement Mode
+          </h3>
 
           <div className="flex flex-wrap gap-3">
             {modes.map((mode) => (
@@ -81,11 +89,27 @@ const PromptForm = ({ setEnhancedPrompt }) => {
 
       <button
         onClick={handleEnhance}
-        disabled={loading}
-        className="w-full mt-6 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 font-semibold hover:scale-105 transition duration-300"
+        disabled={loading || !prompt.trim()}
+        className={`w-full mt-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+          loading || !prompt.trim()
+            ? "bg-gray-600 cursor-not-allowed"
+            : "bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-105"
+        }`}
       >
-        {loading ? "⏳ Enhancing..." : "✨ Enhance Prompt"}
+        {loading ? (
+          <span className="animate-pulse">
+            ✨ Enhancing...
+          </span>
+        ) : (
+          "✨ Enhance Prompt"
+        )}
       </button>
+
+      {error && (
+        <p className="mt-4 text-red-400 text-center font-medium">
+          {error}
+        </p>
+      )}
     </motion.div>
   );
 };
