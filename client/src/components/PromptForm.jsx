@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-const modes = ["Professional", "Coding", "Creative", "Marketing", "Learning"];
+const modes = [
+  "Professional",
+  "Coding",
+  "Creative",
+  "Marketing",
+  "Learning",
+];
 
 const PromptForm = ({ setEnhancedPrompt }) => {
   const [prompt, setPrompt] = useState("");
@@ -10,6 +16,8 @@ const PromptForm = ({ setEnhancedPrompt }) => {
   const [error, setError] = useState("");
 
   const handleEnhance = async () => {
+    if (!prompt.trim()) return;
+
     setLoading(true);
     setError("");
 
@@ -20,7 +28,7 @@ const PromptForm = ({ setEnhancedPrompt }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt,
+          prompt: prompt.trim(),
           mode: selectedMode,
         }),
       });
@@ -30,8 +38,8 @@ const PromptForm = ({ setEnhancedPrompt }) => {
       if (data.success) {
         setEnhancedPrompt(data.enhancedPrompt);
       } else {
-        setError(data.message || "Failed to enhance prompt.");
         setEnhancedPrompt("");
+        setError(data.message || "Failed to enhance prompt.");
       }
     } catch (error) {
       console.error(error);
@@ -42,6 +50,13 @@ const PromptForm = ({ setEnhancedPrompt }) => {
     setLoading(false);
   };
 
+  const handleClear = () => {
+    setPrompt("");
+    setEnhancedPrompt("");
+    setError("");
+    setSelectedMode("Professional");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -49,7 +64,9 @@ const PromptForm = ({ setEnhancedPrompt }) => {
       transition={{ delay: 0.2, duration: 0.6 }}
       className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl"
     >
-      <h2 className="text-2xl font-semibold mb-5">Enter Your Prompt</h2>
+      <h2 className="text-2xl font-semibold mb-5">
+        Enter Your Prompt
+      </h2>
 
       <textarea
         rows="6"
@@ -69,6 +86,7 @@ const PromptForm = ({ setEnhancedPrompt }) => {
             {modes.map((mode) => (
               <button
                 key={mode}
+                type="button"
                 onClick={() => setSelectedMode(mode)}
                 className={`px-5 py-2 rounded-full border transition-all duration-300 ${
                   selectedMode === mode
@@ -82,28 +100,44 @@ const PromptForm = ({ setEnhancedPrompt }) => {
           </div>
         </div>
 
-        <p className="text-gray-400 text-sm">{prompt.length} characters</p>
+        <div className="text-right">
+          <p className="text-gray-400 text-sm">
+            {prompt.length} characters
+          </p>
 
-        <p className="text-gray-400 text-sm">Max 1000</p>
+          <p className="text-gray-400 text-sm">
+            Max 1000
+          </p>
+        </div>
       </div>
 
-      <button
-        onClick={handleEnhance}
-        disabled={loading || !prompt.trim()}
-        className={`w-full mt-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
-          loading || !prompt.trim()
-            ? "bg-gray-600 cursor-not-allowed"
-            : "bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-105"
-        }`}
-      >
-        {loading ? (
-          <span className="animate-pulse">
-            ✨ Enhancing...
-          </span>
-        ) : (
-          "✨ Enhance Prompt"
-        )}
-      </button>
+      <div className="flex gap-4 mt-6">
+        <button
+          onClick={handleEnhance}
+          disabled={loading || !prompt.trim()}
+          className={`flex-1 py-4 rounded-xl font-semibold transition-all duration-300 ${
+            loading || !prompt.trim()
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-105"
+          }`}
+        >
+          {loading ? (
+            <span className="animate-pulse">
+              ✨ Enhancing...
+            </span>
+          ) : (
+            "✨ Enhance Prompt"
+          )}
+        </button>
+
+        <button
+          onClick={handleClear}
+          disabled={loading || !prompt.trim()}
+          className="px-8 py-4 rounded-xl bg-red-500 hover:bg-red-600 transition font-semibold"
+        >
+          Clear
+        </button>
+      </div>
 
       {error && (
         <p className="mt-4 text-red-400 text-center font-medium">

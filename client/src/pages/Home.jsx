@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Hero from "../components/Hero";
 import PromptForm from "../components/PromptForm";
 import OutputCard from "../components/OutputCard";
@@ -6,6 +6,42 @@ import { motion } from "framer-motion";
 
 const Home = () => {
   const [enhancedPrompt, setEnhancedPrompt] = useState("");
+  const [history, setHistory] = useState([]);
+
+  // Load history when app starts
+  useEffect(() => {
+    const savedHistory =
+      JSON.parse(localStorage.getItem("promptHistory")) || [];
+
+    setHistory(savedHistory);
+  }, []);
+
+  // Save prompt to history
+  const saveToHistory = (prompt) => {
+    if (!prompt.trim()) return;
+
+    const updatedHistory = [
+      prompt,
+      ...history.filter((item) => item !== prompt),
+    ].slice(0, 5);
+
+    setHistory(updatedHistory);
+
+    localStorage.setItem("promptHistory", JSON.stringify(updatedHistory));
+  };
+
+  // Called after Gemini returns the enhanced prompt
+  const handleEnhancedPrompt = (prompt) => {
+    setEnhancedPrompt(prompt);
+    saveToHistory(prompt);
+  };
+
+  // Clear entire history
+  const clearHistory = () => {
+    localStorage.removeItem("promptHistory");
+    setHistory([]);
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
       <motion.div
@@ -36,9 +72,14 @@ const Home = () => {
         <div className="w-full max-w-5xl">
           <Hero />
 
-          <PromptForm setEnhancedPrompt={setEnhancedPrompt} />
+          <PromptForm setEnhancedPrompt={handleEnhancedPrompt} />
 
-          <OutputCard enhancedPrompt={enhancedPrompt} />
+          <OutputCard
+            enhancedPrompt={enhancedPrompt}
+            history={history}
+            clearHistory={clearHistory}
+            setEnhancedPrompt={setEnhancedPrompt}
+          />
         </div>
       </div>
     </div>
