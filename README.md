@@ -80,7 +80,7 @@ PromptCraftAI
 Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/PromptCraftAI.git
+git clone https://github.com/TanishaSharma10/PromptCraftAI.git
 ```
 
 Go into the project
