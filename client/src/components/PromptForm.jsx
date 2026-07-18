@@ -22,7 +22,7 @@ const PromptForm = ({ setEnhancedPrompt }) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/enhance", {
+      const response = await fetch("https://promptcraft-ai-backend-y0bm.onrender.com/api/enhance", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
