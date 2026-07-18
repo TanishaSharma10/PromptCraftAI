@@ -6,7 +6,7 @@ PromptCraft AI is a full-stack AI-powered prompt enhancement application that tr
 
 ## 🌐 Live Demo
 
-**Frontend:** https://promptcraft-ai-skz2.onrender.com/
+**Link:** https://promptcraft-ai-skz2.onrender.com/
 
 ---
 
