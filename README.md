@@ -122,10 +122,10 @@ GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 **Tanisha Sharma**
 
 LinkedIn:
-(https://www.linkedin.com/in/tanisha-sharma-694767252)
+https://www.linkedin.com/in/tanisha-sharma-694767252
 
 GitHub:
-()
+https://github.com/TanishaSharma10
 
 ---
 
